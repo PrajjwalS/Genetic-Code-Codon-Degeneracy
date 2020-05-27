@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/GCCD/dependencies/jfreechart-1.0.1/lib/gnujaxp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GCCD/dependencies/jfreechart-1.0.1/lib/junit.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GCCD/dependencies/jfreechart-1.0.1/lib/jfreechart-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GCCD/dependencies/jfreechart-1.0.1/lib/jcommon-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/GCCD/dependencies/jfreechart-1.0.1/lib/servlet.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

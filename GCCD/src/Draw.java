@@ -4,17 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 import javax.swing.plaf.FileChooserUI;
+import javax.swing.table.DefaultTableModel;
 
 public class Draw extends JFrame implements ActionListener {
-    JButton openEna, openWgs,histo,skew;
-    protected static JTextArea dbContent,output;
+    JButton openEna, openWgs,histo,skew,db;
+    protected static JTextArea output;
+    protected static JTable dbContent;
     JFileChooser fileChooser;
     JScrollPane scrollPane1,scrollPane2;
     JLabel dbString,outStr ;
     String file_dir_wgs;
+    String [][]rowData ;
     public Draw(){
         // initialize the group layout : we have to configure both horizontal as well as
         // vertical layout for group layout
@@ -23,6 +30,8 @@ public class Draw extends JFrame implements ActionListener {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
+        db = new JButton("View Database");
+        db.addActionListener(this);
         histo = new JButton("Show Histogram");
         histo.addActionListener(this);
         skew = new JButton("Show Skewed graph");
@@ -37,13 +46,16 @@ public class Draw extends JFrame implements ActionListener {
         outStr = new JLabel("OutPut: ");
         dbString = new JLabel("Database");
 
-        dbContent = new JTextArea(10,20);
+        String []columnName = {"GEN_NAME","GEN_SEQ","GEN_SEQ_LEN","AA_SEQ","AA_SEQ_LEN","REMARKS" };
+
+        DefaultTableModel model = new DefaultTableModel();
+        for (String s : columnName) model.addColumn(s);
+        dbContent = new JTable(model);
         scrollPane1 = new JScrollPane(output);
         scrollPane2 = new JScrollPane(dbContent);
+        dbContent.setFillsViewportHeight(true);
 
-//        JScrollBar vertical = scrollPane1.getVerticalScrollBar();
-//        vertical.setValue(vertical.getMaximum());
-//        scrollPane1.setVerticalScrollBar(vertical);
+
         // configuring horizontal layout
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -60,12 +72,15 @@ public class Draw extends JFrame implements ActionListener {
                                 .addComponent(scrollPane2)
 
                 )
+                .addGroup(layout.createParallelGroup()
+                .addComponent(db))
         );
         // configuring vertical layout
         layout.setVerticalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(openEna)
-                .addComponent(openWgs))
+                .addComponent(openWgs)
+                .addComponent(db))
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                 .addComponent(histo)
                 .addComponent(skew))
@@ -93,7 +108,7 @@ public class Draw extends JFrame implements ActionListener {
                 String file_dir = file.getAbsolutePath();
                 try {
                     data_base_generator.db_gen(file_dir);
-                } catch (IOException ex) {
+                } catch (IOException | SQLException ex) {
                     ex.printStackTrace();
                 }
             }else{
@@ -111,7 +126,7 @@ public class Draw extends JFrame implements ActionListener {
         }else if(e.getSource() == histo){
             bar_chart_creator chart = new bar_chart_creator("GCCD",
                     "Percentage of each AA one letter code",data_base_generator.freq);
-            chart.pack( );
+            chart.pack();
             RefineryUtilities.centerFrameOnScreen( chart );
             chart.setVisible( true );
         }else if(e.getSource() == skew){
@@ -119,6 +134,38 @@ public class Draw extends JFrame implements ActionListener {
                 wga.handle_wga_file(file_dir_wgs);
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+        }else if(e.getSource() == db){
+            // show the database content
+            Connection connection = DBConnect.connect();// establishes a connection to the database
+            PreparedStatement ps = null;
+            ResultSet resultSet = null;
+            try{
+                String sql = "SELECT * FROM GeneInfo";
+                ps = connection.prepareStatement(sql);
+                resultSet = ps.executeQuery();
+                if(resultSet==null){
+                    // infom that db is empty
+                    output.append("No record found in database, please select .ena file first");
+                    System.err.println("No records found");
+                }else {
+                    while (resultSet.next()) {
+                        // read all the data
+                        String genName = resultSet.getString("GEN_NAME");
+                        String genSeq = resultSet.getString("GEN_SEQ");
+                        Long genSeqLen = resultSet.getLong("GEN_SEQ_LEN");
+                        String aaSeq = resultSet.getString("AA_SEQ");
+                        Long aaSeqLen = resultSet.getLong("AA_SEQ_LEN");
+                        String remarks = resultSet.getString("REMARKS");
+
+                        // add this row to the table
+                        DefaultTableModel model = (DefaultTableModel) dbContent.getModel(); // get the model of the table
+                        model.addRow(new Object[]{genName,genSeq,genSeqLen,aaSeq,aaSeqLen,remarks});
+
+                    }
+                }
+            }catch (SQLException exc){
+                exc.printStackTrace();
             }
         }
         output.setCaretPosition(output.getDocument().getLength()); // sets the vertical scrollbar at the end.

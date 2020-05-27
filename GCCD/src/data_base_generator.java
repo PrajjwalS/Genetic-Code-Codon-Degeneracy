@@ -1,6 +1,7 @@
 import org.jfree.ui.RefineryUtilities;
 
 import java.io.*;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -44,7 +45,6 @@ public class data_base_generator
         long AASeqLength;
         String remark;
         boolean valid;
-
         //default constructor for record
         public data_base_record()
         {
@@ -55,12 +55,13 @@ public class data_base_generator
             this.AASeqLength = 0;
             this.remark = "";
             this.valid = true;
+//            insert_record_in_DB();
+            DBConnect.connect(); // create the connection to the database
         }
     }
 
     // this function reads the ena file and generates the .db file
-   static public void  db_gen(String filepath) throws IOException
-    {
+   static public void  db_gen(String filepath) throws IOException, SQLException {
         // initiazling the freq map
         freq.put('A', 0L);
         freq.put('B', 0L);
@@ -92,7 +93,7 @@ public class data_base_generator
 
         // reading the ena file to fill up a new record, and sending the record to the Database
 
-            // intially offsetting to find the first '>' symbol
+            // initially offsetting to find the first '>' symbol
             int c = 0;
             while(true)         //Read char by Char
             {
@@ -103,7 +104,7 @@ public class data_base_generator
                 else if((char)c=='>')
                     break;
             }
-            data_base_record record;
+            data_base_record record = null;
         // now starting the loop
             while(true)
             {
@@ -168,16 +169,19 @@ public class data_base_generator
                             }
                             record.AASeqLength=record.AASeq.length();
                         }
+                        // adding the record to the database
+
                         Draw.output.append("GENESEQ:"+record.geneSeq+"\n");
                         Draw.output.append("GENlen:"+record.geneSeqLength+"\n");
                         Draw.output.append("AASEQ:"+record.AASeq+"\n");
                         Draw.output.append("AASEQLEN:"+record.AASeqLength+"\n");
                         Draw.output.append("REMARK:"+record.remark+"\n");
 
-
-
-
-                        //insert_record_in_DB();
+//                        //insert_record_in_DB();
+//                        DBConnect.connect(); // create the connection to the database
+                        // now add the entry
+//                        DBConnect.addEntry(record.geneName,record.geneSeq,record.geneSeqLength,record.AASeq,record.AASeqLength,record.remark);
+                        System.out.println("Currently not inserting...unComment to Insert!");
                         break;
                     }
                     else
@@ -192,6 +196,7 @@ public class data_base_generator
                     }
                 }
             }
+
 
             // asking if to show bar chart or not
 //            System.out.println("Enter 1 if you would like to see AA-Code Bar Chart\nEnter 2 to see previous menu");
