@@ -6,9 +6,11 @@ import java.util.Vector;
 
 public class wga
 {
+    protected static Vector skew_GC_cumm;
    static long frame_size=100;
 
-    static void handle_wga_file(String file_path) throws IOException {
+
+    protected static void handle_wga_file(String file_path) throws IOException {
         File file = new File(file_path);
 
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -43,7 +45,7 @@ public class wga
         }
         // reading seq  frame_len per time
         long count=0;
-        Vector skew_GC_cumm= new Vector();
+        skew_GC_cumm= new Vector();
         while((c=br.read())!=-1)
         {
             count++;
@@ -62,18 +64,12 @@ public class wga
                 C++;
         }
 
-        // asking if to show skew graph or not
-        System.out.println("Enter 1 if you would like to see GC skew graph\nEnter 2 to see previous menu");
-        Scanner sc=new Scanner(System.in);
-        int k=sc.nextInt();
-        if(k==1)
-        {
-            XY_Plot chart = new XY_Plot("GCCD",
-                    "GC SKEW GRAPH",skew_GC_cumm);
-            chart.pack( );
-            RefineryUtilities.centerFrameOnScreen( chart );
-            chart.setVisible( true );
-        }
+        XY_Plot chart = new XY_Plot("GCCD",
+                "GC SKEW GRAPH",skew_GC_cumm);
+        chart.pack( );
+        RefineryUtilities.centerFrameOnScreen( chart );
+        chart.setVisible( true );
+
 
 
     }

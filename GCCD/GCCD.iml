@@ -7,22 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/dependencies/jfreechart-1.0.1/lib/gnujaxp.jar!/" />
-          <root url="jar://$MODULE_DIR$/dependencies/jfreechart-1.0.1/lib/jcommon-1.0.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/dependencies/jfreechart-1.0.1/lib/jfreechart-1.0.1.jar!/" />
-          <root url="jar://$MODULE_DIR$/dependencies/jfreechart-1.0.1/lib/junit.jar!/" />
-          <root url="jar://$MODULE_DIR$/dependencies/jfreechart-1.0.1/lib/servlet.jar!/" />
-          <root url="file://$MODULE_DIR$" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/dependencies/jfreechart-1.0.1/source" />
-          <root url="file://$MODULE_DIR$/src" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="module" module-name="dependencies" />
   </component>
 </module>

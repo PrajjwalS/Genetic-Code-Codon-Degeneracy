@@ -28,12 +28,12 @@ public class data_base_generator
     // setting an instance codon_map for this operation as variable cm
     static  codon_map cm = new codon_map();
 
-    // Map for storing the frequency of each AA letter code occured
-    private static final Map<Character, Long> freq = new HashMap<>();
+    // Map for storing the frequency of each AA letter code occurred
+    protected static final Map<Character, Long> freq = new HashMap<>();
 
 
     ///////////////
-    // all the different paramenters of a single DB record goes here
+    // all the different parameters of a single DB record goes here
     // objects holds one record, and is to be sent to DB
     static class data_base_record
     {
@@ -168,12 +168,11 @@ public class data_base_generator
                             }
                             record.AASeqLength=record.AASeq.length();
                         }
-                        System.out.println("GENESEQ:"+record.geneSeq);
-                        System.out.println("GENlen:"+record.geneSeqLength);
-                        System.out.println("AASEQ:"+record.AASeq);
-                        System.out.println("AASEQLEN:"+record.AASeqLength);
-                        System.out.println("REMARK:"+record.remark);
-
+                        Draw.output.append("GENESEQ:"+record.geneSeq+"\n");
+                        Draw.output.append("GENlen:"+record.geneSeqLength+"\n");
+                        Draw.output.append("AASEQ:"+record.AASeq+"\n");
+                        Draw.output.append("AASEQLEN:"+record.AASeqLength+"\n");
+                        Draw.output.append("REMARK:"+record.remark+"\n");
 
 
 
@@ -195,18 +194,18 @@ public class data_base_generator
             }
 
             // asking if to show bar chart or not
-            System.out.println("Enter 1 if you would like to see AA-Code Bar Chart\nEnter 2 to see previous menu");
-            Scanner sc=new Scanner(System.in);
-            int k=sc.nextInt();
-            if(k==1)
-            {
-                // showing bar chart with the freq map
-                bar_chart_creator chart = new bar_chart_creator("GCCD",
-                        "Percentage of each AA one letter code",freq);
-                chart.pack( );
-                RefineryUtilities.centerFrameOnScreen( chart );
-                chart.setVisible( true );
-            }
+//            System.out.println("Enter 1 if you would like to see AA-Code Bar Chart\nEnter 2 to see previous menu");
+//            Scanner sc=new Scanner(System.in);
+//            int k=sc.nextInt();
+//            if(k==1)
+//            {
+//                // showing bar chart with the freq map
+//                bar_chart_creator chart = new bar_chart_creator("GCCD",
+//                        "Percentage of each AA one letter code",freq);
+//                chart.pack( );
+//                RefineryUtilities.centerFrameOnScreen( chart );
+//                chart.setVisible( true );
+//            }
 
 
 
